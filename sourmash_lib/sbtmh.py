@@ -8,10 +8,10 @@ from sourmash_lib import sourmash_tst_utils as utils
 from .sbt import SBT, GraphFactory, Leaf
 
 
-cache = {}
-
-
 class SigLeaf(Leaf):
+
+    _cache = {}
+
     def __str__(self):
         return '**Leaf:{name} -> {metadata}'.format(
                 name=self.name, metadata=self.metadata)
