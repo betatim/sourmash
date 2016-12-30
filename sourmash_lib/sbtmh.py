@@ -25,20 +25,17 @@ class SigLeaf(Leaf):
         for v in self.data.estimator.mh.get_mins():
             parent.data.count(v)
 
-    @staticmethod
-    def load(info, dirname):
+    @property
+    def data(self):
         from sourmash_lib import signature
+        if self._data is None:
+            with open(self._filename, 'r') as fp:
+                self._data = next(signature.load_signatures(fp))
+        return self._data
 
-        filename = os.path.join(dirname, info['filename'])
-        if filename in cache:
-            return cache[filename]
-
-        with open(filename, 'r') as fp:
-            data = next(signature.load_signatures(fp))
-
-        x = SigLeaf(info['metadata'], data, name=info['name'])
-        cache[filename] = x
-        return x
+    @data.setter
+    def data(self, new_data):
+        self._data = new_data
 
 
 def search_minhashes(node, sig, threshold, results=None):
